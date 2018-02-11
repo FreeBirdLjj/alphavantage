@@ -1,0 +1,34 @@
+{
+  "folders": [
+    {
+      "follow_symlinks": true,
+      "path": ".."
+    }
+  ],
+  "settings": {},
+  "build_systems": [
+    {
+      "name": "stock",
+      "cmd": [
+        "stack build"
+      ],
+      "shell": true,
+      "working_dir": "${project_path:${folder}}",
+      "variants": [
+        {
+          "name": "test",
+          "shell": true,
+          "cmd": [
+            "stack test"
+          ]
+        },
+        {
+          "name": "clean",
+          "cmd": [
+            "stack clean"
+          ]
+        }
+      ]
+    }
+  ]
+}

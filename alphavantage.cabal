@@ -1,0 +1,73 @@
+name:                alphavantage
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/FreeBirdLjj/alphavantage#readme
+license:             BSD2
+license-file:        LICENSE
+author:              Author name here
+maintainer:          FreeBirdLjj@gmail.com
+copyright:           2018 FreeBirdLjj
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+
+  exposed-modules:     AlphaVantage.Stock.TimeSeries
+                     , AlphaVantage.ForeignExchange
+                     , AlphaVantage.DigitalCurrency
+  other-modules:       AlphaVantage.Stock.TimeSeries.Intraday
+                     , AlphaVantage.Stock.TimeSeries.Daily
+                     , AlphaVantage.Stock.TimeSeries.DailyAdjusted
+                     , AlphaVantage.Stock.TimeSeries.Weekly
+                     , AlphaVantage.Stock.TimeSeries.WeeklyAdjusted
+                     , AlphaVantage.Stock.TimeSeries.Monthly
+                     , AlphaVantage.Stock.TimeSeries.MonthlyAdjusted
+                     , AlphaVantage.DigitalCurrency.Intraday
+                     , AlphaVantage.DigitalCurrency.Daily
+                     , AlphaVantage.DigitalCurrency.Weekly
+                     , AlphaVantage.DigitalCurrency.Monthly
+  build-depends:       base >= 4.7 && < 5
+                     , aeson
+                     , async
+                     , bytestring
+                     , containers
+                     , http-client
+                     , http-client-tls
+                     , http-conduit
+                     , http-types
+                     , unordered-containers
+                     , text
+                     , time
+                     , tostring
+  default-language:    Haskell2010
+
+test-suite alphavantage-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  other-modules:       AlphaVantage.Stock.TimeSeries.HttpSpec
+                     , AlphaVantage.Stock.TimeSeries.JsonSpec
+                     , AlphaVantage.ForeignExchange.HttpSpec
+                     , AlphaVantage.ForeignExchange.JsonSpec
+                     , AlphaVantage.DigitalCurrency.HttpSpec
+                     , AlphaVantage.DigitalCurrency.JsonSpec
+  build-depends:       base
+                     , aeson
+                     , bytestring
+                     , containers
+                     , hspec
+                     , http-client
+                     , http-client-tls
+                     , http-types
+                     , QuickCheck
+                     , alphavantage
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: git://github.com/FreeBirdLjj/alphavantage.git
