@@ -9,6 +9,7 @@ module AlphaVantage.DigitalCurrency.Daily
   , getDaily
   ) where
 
+import qualified AlphaVantage.Config
 import           Data.Aeson
 import qualified Data.ByteString
 import qualified Data.ByteString.Lazy
@@ -102,8 +103,6 @@ dailyMetadata = metadata
 dailyTimeSeries :: Daily -> Data.Map.Lazy.Map Data.Time.Calendar.Day TimePoint
 dailyTimeSeries = timeSeries
 
-baseURL = "https://www.alphavantage.co/query"
-
 -- API Parameters
 -- Required: function
 --   The time series of your choice. In this case, function=DIGITAL_CURRENCY_DAILY
@@ -127,7 +126,7 @@ getDaily digitalCurrencyName marketName apiKey manager = do
                   , ("market", Just marketNameByteString)
                   , ("apikey", Just apiKeyByteString)
                   ]
-              $ baseURL
+              $ AlphaVantage.Config.baseURL
 
   response <- Network.HTTP.Client.httpLbs request manager
   return (Data.Aeson.eitherDecode (Network.HTTP.Client.responseBody response) :: Either String Daily)

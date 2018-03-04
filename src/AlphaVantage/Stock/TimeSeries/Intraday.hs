@@ -9,6 +9,7 @@ module AlphaVantage.Stock.TimeSeries.Intraday
   , getIntraday
   ) where
 
+import qualified AlphaVantage.Config
 import           Data.Aeson
 import qualified Data.ByteString
 import qualified Data.ByteString.Lazy
@@ -80,8 +81,6 @@ intradayMetadata = metadata
 intradayTimeSeries :: Intraday -> Data.Map.Lazy.Map Data.Time.LocalTime.LocalTime TimePoint
 intradayTimeSeries = timeSeries
 
-baseURL = "https://www.alphavantage.co/query"
-
 -- API Parameters
 -- Required: function
 --   The time series of your choice. In this case, function=TIME_SERIES_INTRADAY
@@ -108,7 +107,7 @@ getIntraday equityName apiKey manager = do
                   , ("interval", Just "1min")
                   , ("apikey", Just apiKeyByteString)
                   ]
-              $ baseURL
+              $ AlphaVantage.Config.baseURL
 
   response <- Network.HTTP.Client.httpLbs request manager
   return (Data.Aeson.eitherDecode (Network.HTTP.Client.responseBody response) :: Either String Intraday)

@@ -9,6 +9,7 @@ module AlphaVantage.Stock.TimeSeries.MonthlyAdjusted
   , getMonthlyAdjusted
   ) where
 
+import qualified AlphaVantage.Config
 import           Data.Aeson
 import qualified Data.ByteString
 import qualified Data.ByteString.Lazy
@@ -71,8 +72,6 @@ monthlyAdjustedMetadata = metadata
 monthlyAdjustedTimeSeries :: MonthlyAdjusted -> Data.Map.Lazy.Map Data.Time.Calendar.Day TimePoint
 monthlyAdjustedTimeSeries = timeSeries
 
-baseURL = "https://www.alphavantage.co/query"
-
 -- API Parameters
 -- Required: function
 --   The time series of your choice. In this case, function=TIME_SERIES_DAILY_ADJUSTED
@@ -96,7 +95,7 @@ getMonthlyAdjusted equityName apiKey manager = do
                   , ("symbol", Just equityNameByteString)
                   , ("apikey", Just apiKeyByteString)
                   ]
-              $ baseURL
+              $ AlphaVantage.Config.baseURL
 
   response <- Network.HTTP.Client.httpLbs request manager
   return (Data.Aeson.eitherDecode (Network.HTTP.Client.responseBody response) :: Either String MonthlyAdjusted)

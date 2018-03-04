@@ -9,6 +9,7 @@ module AlphaVantage.DigitalCurrency.Intraday
   , getIntraday
   ) where
 
+import qualified AlphaVantage.Config
 import           Data.Aeson
 import qualified Data.ByteString.Char8
 import qualified Data.HashMap.Strict
@@ -77,8 +78,6 @@ intradayMetadata = metadata
 intradayTimeSeries :: Intraday -> Data.Map.Lazy.Map Data.Time.LocalTime.LocalTime TimePoint
 intradayTimeSeries = timeSeries
 
-baseURL = "https://www.alphavantage.co/query"
-
 -- API Parameters
 -- Required: function
 --   The time series of your choice. In this case, function=DIGITAL_CURRENCY_INTRADAY
@@ -102,7 +101,7 @@ getIntraday digitalCurrencyName marketName apiKey manager = do
                 , ("market", Just marketNameByteString)
                 , ("apikey", Just apiKeyByteString)
                 ]
-                baseURL
+              $ AlphaVantage.Config.baseURL
 
   response <- Network.HTTP.Client.httpLbs request manager
   return (Data.Aeson.eitherDecode (Network.HTTP.Client.responseBody response) :: Either String Intraday)

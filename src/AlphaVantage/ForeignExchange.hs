@@ -9,6 +9,7 @@ module AlphaVantage.ForeignExchange
   , getCurrencyExchangeRate
   ) where
 
+import qualified AlphaVantage.Config
 import           Data.Aeson
 import qualified Data.ByteString
 import qualified Data.ByteString.Lazy
@@ -53,8 +54,6 @@ instance Data.Aeson.FromJSON CurrencyExchangeRate where
 currencyExchangeRateRealtimeData :: CurrencyExchangeRate -> RealtimeCurrencyExchangeRate
 currencyExchangeRateRealtimeData = realtimeData
 
-baseURL = "https://www.alphavantage.co/query"
-
 -- API Parameters
 -- Required: function
 --   The function of your choice. In this case, function=CURRENCY_EXCHANGE_RATE
@@ -78,7 +77,7 @@ getCurrencyExchangeRate fromCurrencyCode toCurrencyCode apiKey manager = do
                   , ("to_currency", Just toCurrencyCodeByteString)
                   , ("apikey", Just apiKeyByteString)
                   ]
-              $ baseURL
+              $ AlphaVantage.Config.baseURL
 
   response <- Network.HTTP.Client.httpLbs request manager
   return (Data.Aeson.eitherDecode (Network.HTTP.Client.responseBody response) :: Either String CurrencyExchangeRate)

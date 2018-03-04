@@ -16,7 +16,8 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
 
-  exposed-modules:     AlphaVantage.Stock.TimeSeries
+  exposed-modules:     AlphaVantage.Config
+                     , AlphaVantage.Stock.TimeSeries
                      , AlphaVantage.ForeignExchange
                      , AlphaVantage.DigitalCurrency
   other-modules:       AlphaVantage.Stock.TimeSeries.Intraday
