@@ -8,7 +8,7 @@
   "settings": {},
   "build_systems": [
     {
-      "name": "stock",
+      "name": "alphavantage",
       "cmd": [
         "stack build"
       ],
