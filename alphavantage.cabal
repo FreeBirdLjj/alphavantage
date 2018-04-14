@@ -5,7 +5,7 @@ version:             0.1.0.0
 homepage:            https://github.com/FreeBirdLjj/alphavantage#readme
 license:             BSD2
 license-file:        LICENSE
-author:              Author name here
+author:              FreeBirdLjj
 maintainer:          FreeBirdLjj@gmail.com
 copyright:           2018 FreeBirdLjj
 category:            Web
