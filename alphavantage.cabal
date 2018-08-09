@@ -20,7 +20,8 @@ library
                      , AlphaVantage.Stock.TimeSeries
                      , AlphaVantage.ForeignExchange
                      , AlphaVantage.DigitalCurrency
-  other-modules:       AlphaVantage.Stock.TimeSeries.Intraday
+  other-modules:       AlphaVantage.TimeOrDay
+                     , AlphaVantage.Stock.TimeSeries.Intraday
                      , AlphaVantage.Stock.TimeSeries.Daily
                      , AlphaVantage.Stock.TimeSeries.DailyAdjusted
                      , AlphaVantage.Stock.TimeSeries.Weekly

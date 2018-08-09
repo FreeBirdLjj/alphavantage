@@ -10,6 +10,7 @@ module AlphaVantage.Stock.TimeSeries.DailyAdjusted
   ) where
 
 import qualified AlphaVantage.Config
+import qualified AlphaVantage.TimeOrDay
 import           Data.Aeson
 import qualified Data.ByteString
 import qualified Data.ByteString.Lazy
@@ -34,7 +35,7 @@ instance Data.Aeson.FromJSON OutputSizeOption where
 data MetaData = MetaData
   { information :: String
   , symbol :: String
-  , lastRefreshed :: Data.Time.Calendar.Day
+  , lastRefreshed :: AlphaVantage.TimeOrDay.TimeOrDay
   , outputSize :: OutputSizeOption
   , timeZone :: String
   } deriving (Eq, Ord, Read, Show)
@@ -75,10 +76,9 @@ data DailyAdjusted = DailyAdjusted
   } deriving (Eq, Read, Show)
 
 instance Data.Aeson.FromJSON DailyAdjusted where
-  parseJSON = Data.Aeson.withObject "DailyAdjusted" $ \o -> do
-    metadata   <- o .: "Meta Data"
-    timeSeries <- o .: "Time Series (Daily)"
-    return $ DailyAdjusted metadata timeSeries
+  parseJSON (Data.Aeson.Object v) = DailyAdjusted
+    <$> v .: "Meta Data"
+    <*> v .: "Time Series (Daily)"
 
 dailyAdjustedMetadata :: DailyAdjusted -> MetaData
 dailyAdjustedMetadata = metadata

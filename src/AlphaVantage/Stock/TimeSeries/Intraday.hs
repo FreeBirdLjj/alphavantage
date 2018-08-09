@@ -10,6 +10,7 @@ module AlphaVantage.Stock.TimeSeries.Intraday
   ) where
 
 import qualified AlphaVantage.Config
+import qualified AlphaVantage.TimeOrDay
 import           Data.Aeson
 import qualified Data.ByteString
 import qualified Data.ByteString.Lazy
@@ -33,7 +34,7 @@ instance Data.Aeson.FromJSON OutputSizeOption where
 data MetaData = MetaData
   { information :: String
   , symbol :: String
-  , lastRefreshed :: Data.Time.LocalTime.LocalTime
+  , lastRefreshed :: AlphaVantage.TimeOrDay.TimeOrDay
   , interval :: String
   , outputSize :: OutputSizeOption
   , timeZone :: String

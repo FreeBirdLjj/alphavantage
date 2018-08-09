@@ -10,6 +10,7 @@ module AlphaVantage.Stock.TimeSeries.MonthlyAdjusted
   ) where
 
 import qualified AlphaVantage.Config
+import qualified AlphaVantage.TimeOrDay
 import           Data.Aeson
 import qualified Data.ByteString
 import qualified Data.ByteString.Lazy
@@ -24,7 +25,7 @@ import qualified Network.HTTP.Simple
 data MetaData = MetaData
   { information :: String
   , symbol :: String
-  , lastRefreshed :: Data.Time.Calendar.Day
+  , lastRefreshed :: AlphaVantage.TimeOrDay.TimeOrDay
   , timeZone :: String
   } deriving (Eq, Ord, Read, Show)
 
@@ -61,10 +62,9 @@ data MonthlyAdjusted = MonthlyAdjusted
   } deriving (Eq, Read, Show)
 
 instance Data.Aeson.FromJSON MonthlyAdjusted where
-  parseJSON = Data.Aeson.withObject "MonthlyAdjusted" $ \o -> do
-    metadata   <- o .: "Meta Data"
-    timeSeries <- o .: "Monthly Adjusted Time Series"
-    return $ MonthlyAdjusted metadata timeSeries
+  parseJSON (Data.Aeson.Object v) = MonthlyAdjusted
+    <$> v .: "Meta Data"
+    <*> v .: "Monthly Adjusted Time Series"
 
 monthlyAdjustedMetadata :: MonthlyAdjusted -> MetaData
 monthlyAdjustedMetadata = metadata
