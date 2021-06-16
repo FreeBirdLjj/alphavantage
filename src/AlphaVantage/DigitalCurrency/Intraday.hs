@@ -26,8 +26,9 @@ data MetaData = MetaData
   , digitalCurrencyName :: String
   , marketCode :: String
   , marketName :: String
-  , interval :: String
   , lastRefreshed :: Data.Time.LocalTime.LocalTime
+  , interval :: String
+  , outputSize :: String
   , timeZone :: String
   } deriving (Eq, Ord, Read, Show)
 
@@ -38,29 +39,26 @@ instance Data.Aeson.FromJSON MetaData where
     <*> v .: "3. Digital Currency Name"
     <*> v .: "4. Market Code"
     <*> v .: "5. Market Name"
-    <*> v .: "6. Interval"
-    <*> v .: "7. Last Refreshed"
-    <*> v .: "8. Time Zone"
+    <*> v .: "6. Last Refreshed"
+    <*> v .: "7. Interval"
+    <*> v .: "8. Output Size"
+    <*> v .: "9. Time Zone"
 
 data TimePoint = TimePoint
-  { price :: Float
-  , volume :: Float
-  , marketCap :: Float
+  { open :: Float
+  , high :: Float
+  , low :: Float
+  , close :: Float
+  , volume :: Int
   } deriving (Eq, Ord, Read, Show)
 
 instance Data.Aeson.FromJSON TimePoint where
-  parseJSON = Data.Aeson.withObject "TimePoint" $ \o -> do
-    let hm = Data.HashMap.Strict.toList o
-    price <- case
-      Data.List.find
-        (Data.Text.isPrefixOf (Data.Text.pack "1a. price") . fst)
-        hm
-      of
-        Just (k, _) -> fmap read $ o .: k
-        Nothing -> fail "key for price not present"
-    volume <- fmap read $ o .: "2. volume"
-    marketCap <- fmap read $ o .: "3. market cap (USD)"
-    return $ TimePoint price volume marketCap
+  parseJSON (Data.Aeson.Object v) = TimePoint
+    <$> (fmap read $ v .: "1. open")
+    <*> (fmap read $ v .: "2. high")
+    <*> (fmap read $ v .: "3. low")
+    <*> (fmap read $ v .: "4. close")
+    <*> v .: "5. volume"
 
 data Intraday = Intraday
   { metadata :: MetaData
@@ -70,7 +68,7 @@ data Intraday = Intraday
 instance Data.Aeson.FromJSON Intraday where
   parseJSON (Data.Aeson.Object v) = Intraday
     <$> v .: "Meta Data"
-    <*> v .: "Time Series (Digital Currency Intraday)"
+    <*> v .: "Time Series Crypto (5min)"
 
 intradayMetadata :: Intraday -> MetaData
 intradayMetadata = metadata
@@ -80,11 +78,13 @@ intradayTimeSeries = timeSeries
 
 -- API Parameters
 -- Required: function
---   The time series of your choice. In this case, function=DIGITAL_CURRENCY_INTRADAY
+--   The time series of your choice. In this case, function=CRYPTO_INTRADAY
 -- Required: symbol
 --   The digital/crypto currency of your choice. It can be any of the currencies in the digital currency list. For example: symbol=BTC.
 -- Required: market
 --   The exchange market of your choice. It can be any of the market in the market list. For example: market=CNY.
+-- Required: interval
+--   Time interval between two consecutive data points in the time series. The following values are supported: 1min, 5min, 15min, 30min, 60min
 -- Required: apikey
 --   Your API key.
 getIntraday :: String -> String -> String -> Network.HTTP.Client.Manager -> IO (Either String Intraday)
@@ -96,9 +96,10 @@ getIntraday digitalCurrencyName marketName apiKey manager = do
               $ Network.HTTP.Simple.setRequestSecure True
               $ Network.HTTP.Simple.setRequestPort 443
               $ Network.HTTP.Simple.setRequestQueryString
-                [ ("function", Just "DIGITAL_CURRENCY_INTRADAY")
+                [ ("function", Just "CRYPTO_INTRADAY")
                 , ("symbol", Just digitalCurrencyNameByteString)
                 , ("market", Just marketNameByteString)
+                , ("interval", Just "5min")
                 , ("apikey", Just apiKeyByteString)
                 ]
               $ AlphaVantage.Config.baseURL

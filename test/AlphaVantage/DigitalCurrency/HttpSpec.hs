@@ -26,7 +26,7 @@ spec =
       describe "HTTP" $ do
 
         it "Intraday" $ \manager -> do
-          result' <- AlphaVantage.DigitalCurrency.getIntraday "BTC" "EUR" "demo" manager
+          result' <- AlphaVantage.DigitalCurrency.getIntraday "ETH" "USD" "demo" manager
           case result' of
             Left errMsg -> fail errMsg
             Right result -> do
