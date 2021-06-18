@@ -1,13 +1,11 @@
 name: Haskell CI
 
 on:
-  push:
-    branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
+  - push
+  - pull_request
 
 jobs:
-  build:
+  build_and_test:
 
     runs-on: ubuntu-latest
 
