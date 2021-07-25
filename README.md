@@ -1,2 +1,3 @@
 # alphavantage
-Unofficial client library of alphavantage.co
+
+Unofficial client library of [Alpha Vantage](https://www.alphavantage.co).
